@@ -1,5 +1,7 @@
 # stirling-weather
 
+Simple weather widget deployed [here](https://plachenko.github.io/stirlingweather/)
+
 ## Project setup
 ```
 npm install
@@ -14,11 +16,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
