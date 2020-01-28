@@ -2,7 +2,9 @@
   <div id="widget">
     <!-- <h2>{{temperature}}&#176;</h2> -->
     <!-- <span v-for="(locinfo, idx) in location" :key="idx">{{locinfo}}</span> -->
-    {{Math.round(data.main.temp)}} &deg;
+    <div v-if="data.main">
+      {{Math.round(data.main.temp)}} &deg;
+    </div>
   </div>
 </template>
 

@@ -35,8 +35,8 @@ import axios from 'axios';
 })
 export default class App extends Vue {
   private location: string = "London, UK";
-  private browserLoc!: object;
-  private weatherData!: object;
+  private browserLoc!: any;
+  private weatherData: object = {};
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
   private error: string = "";
   
@@ -55,21 +55,17 @@ export default class App extends Vue {
     let query = '';
     if(type == "latlon"){
       query = `lat=${this.browserLoc.latitude}&lon=${this.browserLoc.longitude}`;
-      console.log(query)
     } else if(type == "name") {
       query = `q=${this.location}`;
     }
     
-    let url = 'http://api.openweathermap.org/data/2.5/weather?' + query + '&APPID=' + this.appID + '&units=imperial';
-    console.log(url);
+    let url = 'https://api.openweathermap.org/data/2.5/weather?' + query + '&APPID=' + this.appID + '&units=imperial';
 
     axios.get(url)
       .then((res)=> {
-        console.log('response', res.data);
         this.weatherData = res.data;
       })
       .catch((err)=>{
-        console.log(err.response);
         this.error = err.response.data.message;
       })
   }
