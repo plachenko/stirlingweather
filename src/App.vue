@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="widget">
-      <h1 style="font-size: 1em; display: block; position: absolute; top: -40px;">Check Weather</h1>
+      <!-- <h1 style="font-size: 1em; display: block; position: absolute; top: -40px;">Check Weather</h1> -->
       <!-- Error Handling -->
       <transition @enter="err_enter" @leave="err_leave">
         <div class="error" v-if="error">Error: {{error}}</div>

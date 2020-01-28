@@ -3,7 +3,7 @@
     <div v-if="data.main" style="padding: 10px;">
       <div style="padding-bottom: 5px; box-sizing: border-box; margin-bottom: 10px; width: 95%; border-bottom: 2px solid; float: left; position: relative;">
         <h2 style="">{{data.name}}, {{data.sys.country}}</h2>
-        <span style="position: absolute; top: 10px; color: #888; right: 0px; font-size: 12px;">(Lat: {{data.coord.lon}}, Lon: {{data.coord.lat}})</span>
+        <span style="position: absolute; top: -30px; color: #888; right: -30px; font-size: 12px;">(Lat: {{data.coord.lon}}, Lon: {{data.coord.lat}})</span>
       </div>
       <div class="temp" @click="convert()" v-if="data.main" style="border-bottom: 3px solid;">
         <span id="num">{{Math.round(temp)}}&deg;</span>
@@ -63,6 +63,8 @@ export default class WeatherWidget extends Vue {
   #widget h2{
     text-align: center;
     margin: 0px;
+    float:left;
+    margin-left: 150px;
   }
   #widget div{
     /* width: 100%; */
