@@ -19,7 +19,7 @@
       <a href="#" v-else id="curLoc" @click="reset">back</a>
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
-        <input placeholder="Check weather for a location (London, UK or Boston, MA US)" type="search" v-model="location" />
+        <input placeholder="Check weather for a location (London, UK or 03063)" type="search" v-model="location" />
       </form>
 
     </div>
