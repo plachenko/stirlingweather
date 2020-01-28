@@ -14,7 +14,8 @@
       </div>
 
       <!-- Location capture form -->
-      <a href="#" id="curLoc" @click="getBrowserLocation">use current location</a>
+      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation">use current location</a>
+      <a href="#" v-else id="curLoc" @click="reset">back</a>
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
         <input placeholder="please enter a location" type="text" v-model="location" />
@@ -48,6 +49,15 @@ export default class App extends Vue {
 
   }
 
+  private reset(){
+    this.weatherData = {};
+    gsap.to('#map', .3, {autoAlpha: 1, display: 'block'});
+    gsap.to('#map canvas', .2, {opacity: 1, delay: .5});
+    gsap.to('#widget', .5, {height: 250});
+    gsap.to('#ww', 1, {opacity: 0});
+    gsap.to('#locinput', 1, {autoAlpha: 1, display: 'block'});
+  }
+
   private getBrowserLocation(){
     navigator.geolocation.getCurrentPosition((loc) => {
       this.getData('lat='+loc.coords.latitude+'&lon='+loc.coords.longitude);
@@ -75,9 +85,11 @@ export default class App extends Vue {
       .then((res) => {
         this.weatherData = res.data;
 
-        gsap.to('#map', 1, {opacity: 0});
-        gsap.to('#locinput', 1, {top:"-=90", zIndex: -10});
-        gsap.from('#ww', 2, {opacity: 0});
+        gsap.to('#map', .3, {autoAlpha: 0});
+        gsap.to('#map canvas', .1, {opacity: 0});
+        gsap.to('#locinput', .5, {autoAlpha:0});
+        gsap.to('#widget', .5, {height: 190});
+        gsap.fromTo('#ww', {opacity: 0}, {opacity: 1});
       })
       .catch((err)=>{
         this.error = err.response.data.message;
@@ -120,6 +132,7 @@ html, body{
   border-radius: 15px 15px 0px 0px;
   text-align: center;
   margin: 0px 0px 10px 0px;
+  z-index: 9999;
   box-sizing: border-box;
   }
 
@@ -133,6 +146,7 @@ html, body{
     width: 100%;
     box-sizing: border-box;
     color:#333;
+    border-radius: 0px 0px 15px 15px;
     font-weight: bold;
     }
   #locinput{
