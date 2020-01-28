@@ -8,11 +8,9 @@
       </transition>
 
       <!-- Weather widget display -->
-      <div style="height: 100%; width: 100%; position: relative;">
-        <transition @enter="fadein" @leave="fadeout">
-          <Map v-if="!weatherData.hasOwnProperty('main')" style="position: absolute;" />
-          <WeatherWidget v-else :data="weatherData" />
-        </transition>
+      <div style="position: relative; height: 100%; width: 100%; position: relative;">
+        <Map ref="map" style="position: absolute;" />
+        <WeatherWidget ref="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
       </div>
 
       <!-- Location capture form -->
@@ -66,44 +64,23 @@ export default class App extends Vue {
     }});
   }
 
-  private fadein(el: any){
-    gsap.to(el, 1, {opacity: 1})
-    /*
-    gsap.to(el, {height: 0, padding: 0, opacity: 0, onComplete:()=>{
-      el.innerHTML = `Error: ${this.error}`;
-      setTimeout(() => {
-        this.error = "";
-        el.innerHTML = "";
-      }, 1000)
-    }});
-    */
-   console.log(el);
-  }
-
-  private fadeout(el: any){
-    gsap.to(el, 1, {opacity: 0})
-  }
-
   private err_leave(el: any, done: any){
     gsap.to(el, {height: 0, padding: 0, opacity: 0, onComplete:done});
   }
 
   private getData(query: string){
-    /*
-    let query = '';
-    if(type == "latlon"){
-      query = `lat=${this.browserLoc.latitude}&lon=${this.browserLoc.longitude}`;
-    } else if(type == "name") {
-      query = `q=${this.location}`;
-    }
-    */
-
     let url = 'https://api.openweathermap.org/data/2.5/weather?' + query + '&APPID=' + this.appID + '&units=imperial';
 
     axios.get(url)
-      .then((res)=> {
+      .then((res) => {
+        let ww = this.$refs.ww.$el;
+        let map = this.$refs.map.$el;
         this.weatherData = res.data;
-        console.log(res.data);
+
+        gsap.to(map, 1, {opacity: 0});
+        gsap.to('#locinput', 1, {top:"-=90", zIndex: -10});
+        gsap.from(ww, 2, {opacity: 0});
+
       })
       .catch((err)=>{
         this.error = err.response.data.message;
@@ -147,7 +124,6 @@ html, body{
   text-align: center;
   margin: 0px 0px 10px 0px;
   box-sizing: border-box;
-  z-index: 9999;
   }
 
   #curLoc{
