@@ -8,15 +8,17 @@
       </transition>
 
       <!-- Weather widget display -->
-      <!-- <WeatherWidget :data="weatherData" /> -->
       <div style="height: 100%; width: 100%; position: relative;">
-        <Map style="position: absolute;" />
+        <transition @enter="fadein" @leave="fadeout">
+          <Map v-if="!weatherData.hasOwnProperty('main')" style="position: absolute;" />
+          <WeatherWidget v-else :data="weatherData" />
+        </transition>
       </div>
 
       <!-- Location capture form -->
       <a href="#" id="curLoc" @click="getBrowserLocation">use current location</a>
 
-      <form id="locinput" @submit.prevent="getData('name')">
+      <form id="locinput" @submit.prevent="getData('q='+location)">
         <input placeholder="please enter a location" type="text" v-model="location" />
       </form>
 
@@ -44,18 +46,13 @@ export default class App extends Vue {
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
   private error: string = "";
 
-  private test: boolean = false;
-
   private mounted(){
-    setTimeout(() => {
-      this.test = true;
-    }, 1000)
+
   }
 
   private getBrowserLocation(){
     navigator.geolocation.getCurrentPosition((loc) => {
-      this.browserLoc = loc.coords;
-      this.getData('latlon');
+      this.getData('lat='+loc.coords.latitude+'&lon='+loc.coords.longitude);
     })
   }
 
@@ -69,23 +66,44 @@ export default class App extends Vue {
     }});
   }
 
+  private fadein(el: any){
+    gsap.to(el, 1, {opacity: 1})
+    /*
+    gsap.to(el, {height: 0, padding: 0, opacity: 0, onComplete:()=>{
+      el.innerHTML = `Error: ${this.error}`;
+      setTimeout(() => {
+        this.error = "";
+        el.innerHTML = "";
+      }, 1000)
+    }});
+    */
+   console.log(el);
+  }
+
+  private fadeout(el: any){
+    gsap.to(el, 1, {opacity: 0})
+  }
+
   private err_leave(el: any, done: any){
     gsap.to(el, {height: 0, padding: 0, opacity: 0, onComplete:done});
   }
 
-  private getData(type: string){
+  private getData(query: string){
+    /*
     let query = '';
     if(type == "latlon"){
       query = `lat=${this.browserLoc.latitude}&lon=${this.browserLoc.longitude}`;
     } else if(type == "name") {
       query = `q=${this.location}`;
     }
+    */
 
     let url = 'https://api.openweathermap.org/data/2.5/weather?' + query + '&APPID=' + this.appID + '&units=imperial';
 
     axios.get(url)
       .then((res)=> {
         this.weatherData = res.data;
+        console.log(res.data);
       })
       .catch((err)=>{
         this.error = err.response.data.message;
@@ -112,9 +130,9 @@ html, body{
   }
   #widget {
     position: relative;
-    background-color:#CCC;
     width: 500px;
     height: 250px;
+    background-color:#CCC;
     border-radius: 15px 15px 0px 0px;
     box-sizing: border-box;
     }
@@ -133,6 +151,7 @@ html, body{
   }
 
   #curLoc{
+    border-top: 2px solid;
     padding: 10px;
     display: inline-block;
     text-align: center;
@@ -152,7 +171,7 @@ html, body{
     #locinput input{
       outline: none;
       border-radius: 10px;
-      border: 3px solid;
+      border: 2px solid;
       box-sizing: border-box;
       width: 100%;
       padding: 10px;

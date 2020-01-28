@@ -5,8 +5,8 @@
       <span><strong>Lat</strong> {{lat}}</span>
       <span><strong>Lon</strong> {{lon}}</span>
     </div>
-    <div style="position: relative; border-radius: 15px; width: 100%; height: 100%; overflow: hidden;">
-      <img src="../assets/world.svg" style="position: absolute;top: -95px;" width="500" alt="">
+    <div style="position: relative; border-radius: 15px; width: 100%; height: 100%; overflow: hidden; background-color:rgb(157, 200, 221);">
+      <img src="../assets/world.svg" style="position: absolute;top: -110px;" width="500" alt="">
     </div>
   </div>
 </template>
@@ -31,13 +31,6 @@ export default class Map extends Vue {
     this.can.width = this.$el.clientWidth - 25;
     this.can.height = this.$el.clientHeight - 20;
     this.ctx = this.can.getContext('2d') as CanvasRenderingContext2D;
-
-    let img = new Image();
-    img.src = "../assets/world.svg";
-    img.onload = () => {
-      this.ctx.drawImage(img, 0, 0);
-    }
-
 
     this.x = this.can.width/2;
     this.y = this.can.height/2;
@@ -93,7 +86,6 @@ export default class Map extends Vue {
   }
 
 canvas{
-  border: 2px solid #AAA;
   border-radius: 15px 15px 0px 0px;
   position: absolute;
   z-index: 9998;
@@ -107,8 +99,10 @@ canvas{
     #latlon span{
       padding: 5px;
       margin: 4px;
+      font-size: 10px;
       display: inline-block;
-      width: 80px;
+      color:#FFF;
+      width: 55px;
       background-color: rgba(0,0,0,.4);
       }
 </style>

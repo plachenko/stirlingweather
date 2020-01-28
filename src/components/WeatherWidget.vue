@@ -2,7 +2,7 @@
   <div id="widget">
     <!-- <h2>{{temperature}}&#176;</h2> -->
     <!-- <span v-for="(locinfo, idx) in location" :key="idx">{{locinfo}}</span> -->
-    <div v-if="data.main">
+    <div class="temp" v-if="data.main">
       {{Math.round(data.main.temp)}} &deg;
     </div>
   </div>
@@ -31,4 +31,7 @@ export default class WeatherWidget extends Vue {
   #widget h2{
     margin: 0px;
   }
+  .temp{
+    font-size: 30px;
+    }
 </style>
