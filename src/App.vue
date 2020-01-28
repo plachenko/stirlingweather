@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <div id="widget">
-      <!-- <h1 style="font-size: 1em; display: block; position: absolute; top: -40px;">Check Weather</h1> -->
+      <h1 style="font-size: 1em; display: block; position: absolute; top: -40px;">Check the weather in an area</h1>
+
       <!-- Error Handling -->
       <transition @enter="err_enter" @leave="err_leave">
         <div class="error" v-if="error">Error: {{error}}</div>
@@ -18,7 +19,7 @@
       <a href="#" v-else id="curLoc" @click="reset">back</a>
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
-        <input placeholder="please enter a location" type="text" v-model="location" />
+        <input placeholder="enter a location" type="search" v-model="location" />
       </form>
 
     </div>
@@ -39,7 +40,7 @@ import gsap from 'gsap';
   },
 })
 export default class App extends Vue {
-  private location: string = "London, UK";
+  private location: string = "";
   private browserLoc!: any;
   private weatherData: object = {};
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
@@ -56,6 +57,7 @@ export default class App extends Vue {
     gsap.to('#widget', .5, {height: 250});
     gsap.to('#ww', 1, {opacity: 0});
     gsap.to('#locinput', 1, {autoAlpha: 1, display: 'block'});
+    this.location = "";
   }
 
   private getBrowserLocation(){
@@ -65,7 +67,7 @@ export default class App extends Vue {
   }
 
   private err_enter(el: any){
-    gsap.from(el, {height: 0, padding: 0, opacity: 0, onComplete:()=>{
+    gsap.from(el, .3, {height: 0, padding: 0, opacity: 0, onComplete:()=>{
       el.innerHTML = `Error: ${this.error}`;
       setTimeout(() => {
         this.error = "";
