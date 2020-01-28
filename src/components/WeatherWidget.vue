@@ -1,20 +1,46 @@
 <template>
   <div id="widget">
-    <!-- <h2>{{temperature}}&#176;</h2> -->
-    <!-- <span v-for="(locinfo, idx) in location" :key="idx">{{locinfo}}</span> -->
-    <div class="temp" v-if="data.main"> {{Math.round(data.main.temp)}}&deg;</div>
-    <div>{{data.name}}, {{data.sys.country}}</div>
-    <div>{{data.weather[0].description}}</div>
-    <img :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
+    <div v-if="data.main">
+      <div class="temp" @click="convert()" v-if="data.main">
+        <span id="num">{{Math.round(temp)}}&deg;</span>
+        <span>{{metric}}</span>
+      </div>
+      <div>{{data.name}}, {{data.sys.country}}</div>
+      <div>{{data.weather[0].description}}</div>
+      <img :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class WeatherWidget extends Vue {
-  @Prop() private data!: object;
+  private metric: string = "F";
+  private temp: number = 0;
+
+  @Prop() private data!: any;
+  @Watch('data', {deep: true, immediate: true})
+  private ondataChange(val: any){
+    if(val.main){
+      this.temp = val.main.temp;
+      if(this.metric == "C"){
+        this.convert();
+      }
+    }
+  }
+
+  private convert(){
+    let tmp = this.data.main.temp;
+    if(this.metric == "F"){
+      this.metric = "C"
+      this.temp = (tmp - 32) * (5/9);
+    } else {
+      this.metric = "F"
+      this.temp = tmp;
+    }
+  }
 }
 </script>
 
@@ -41,7 +67,11 @@ export default class WeatherWidget extends Vue {
     left: 10px;
     border-radius: 90px;
     padding: 10px;
-    width: 50px !important;
-    font-size: 40px;
+    width: 90px !important;
+    cursor: pointer;
+    user-select: none;
     }
+    .temp #num{
+      font-size: 40px;
+      }
 </style>

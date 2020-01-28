@@ -9,8 +9,8 @@
 
       <!-- Weather widget display -->
       <div style="position: relative; height: 100%; width: 100%; position: relative;">
-        <Map ref="map" style="position: absolute;" />
-        <WeatherWidget ref="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
+        <Map id="map" style="position: absolute;" />
+        <WeatherWidget id="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
       </div>
 
       <!-- Location capture form -->
@@ -73,14 +73,11 @@ export default class App extends Vue {
 
     axios.get(url)
       .then((res) => {
-        let ww = this.$refs.ww.$el;
-        let map = this.$refs.map.$el;
         this.weatherData = res.data;
 
-        gsap.to(map, 1, {opacity: 0});
+        gsap.to('#map', 1, {opacity: 0});
         gsap.to('#locinput', 1, {top:"-=90", zIndex: -10});
-        gsap.from(ww, 2, {opacity: 0});
-
+        gsap.from('#ww', 2, {opacity: 0});
       })
       .catch((err)=>{
         this.error = err.response.data.message;
