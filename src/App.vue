@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="widget">
-      <h1 style="font-size: 1em; display: block; position: absolute; top: -40px;">Check the weather in an area</h1>
+      <!-- <h1 style="font-size: 1.5em; display: block; position: absolute; top: -45px;">Check the weather in an area</h1> -->
 
       <!-- Error Handling -->
       <transition @enter="err_enter" @leave="err_leave">
@@ -15,11 +15,11 @@
       </div>
 
       <!-- Location capture form -->
-      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation">use current location</a>
+      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation">Check weather for current location</a>
       <a href="#" v-else id="curLoc" @click="reset">back</a>
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
-        <input placeholder="enter a location" type="search" v-model="location" />
+        <input placeholder="Check weather for a location (London, UK or Boston, MA US)" type="search" v-model="location" />
       </form>
 
     </div>
