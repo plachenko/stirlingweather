@@ -1,21 +1,22 @@
 <template>
   <div id="widget">
     <div v-if="data.main" style="padding: 10px;">
-      <div style="padding-bottom: 5px; box-sizing: border-box; margin-bottom: 10px; width: 95%; border-bottom: 2px solid; float: left; position: relative;">
-        <h2 style="">{{data.name}}, {{data.sys.country}}</h2>
-        <span style="position: absolute; top: -30px; color: #888; right: -30px; font-size: 12px;">(Lat: {{data.coord.lon}}, Lon: {{data.coord.lat}})</span>
+      <div style="padding-bottom: 5px; box-sizing: border-box; margin-bottom: 10px; width: 100%; border-bottom: 2px solid; float: left; position: relative;">
+        <h2>{{data.name}}, {{data.sys.country}}</h2>
+        <span style="position: absolute; top: -30px; color: #888; right: -10px; font-size: 12px;">(Lat: {{data.coord.lon}}, Lon: {{data.coord.lat}})</span>
       </div>
-      <div class="temp" @click="convert()" v-if="data.main" style="border-bottom: 3px solid;">
+      <div class="temp" @click="convert()" v-if="data.main" style="border-bottom: 2px solid; border-top: 2px solid;">
         <span id="num">{{Math.round(temp)}}&deg;</span>
         <span>{{metric}}</span>
         <img style="position: absolute; top: -9px; right: -30px; background-color:#777; border: #FFF 2px solid; border-radius: 90px;" :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
       </div>
-      <div id="inner">
-        <div><strong>Condition:</strong> {{data.weather[0].description}}</div>
-        <div><strong>Wind:</strong> {{data.wind.speed}} mph</div>
-        <div><strong>Pressure:</strong> {{data.main.pressure}}</div>
-        <div><strong>Humidity:</strong> {{data.main.humidity}}</div>
+      <div class="inner">
+        <div><strong>Condition</strong><span>{{data.weather[0].description}}</span></div>
+        <div><strong>Wind</strong><span>{{data.wind.speed}} mph</span></div>
+        <div><strong>Pressure</strong><span>{{data.main.pressure}} hPa</span></div>
+        <div><strong>Humidity</strong><span>{{data.main.humidity}}%</span></div>
       </div>
+      <div class="inner">Wear something.</div>
     </div>
   </div>
 </template>
@@ -74,7 +75,7 @@ export default class WeatherWidget extends Vue {
     background-color:#FFF;
     position: absolute;
     left: 10px;
-    top: 10px;
+    top: -30px;
     border-radius: 90px;
     padding: 10px;
     width: 90px !important;
@@ -84,26 +85,52 @@ export default class WeatherWidget extends Vue {
     .temp #num{
       font-size: 40px;
       }
-      #inner{
-        text-align:left; 
-        width: 340px; 
-        float: right;
+
+      .inner{
+        box-sizing: border-box;
+        float: left;
         background-color:#FFF;
-        border-radius: 10px;
         padding: 5px;
-        margin-right: 20px;
+        }
+        .inner:first-child{
+          border-radius: 10px;
+          text-align:left; 
+          float:left;
+          width: 70%; 
+          }
+        .inner:last-child{
+          border-radius: 0px 10px 10px 0px;
+          height: 100%;
+          float: right;
+          width: 40%; 
+          text-align:left; 
+          }
+
+        .inner div{
+          border-bottom: 1px solid #AAA;
+          }
+          .inner div:last-child{
+            border-bottom: none;
+            }
+            .inner div:last-child strong{
+              border-radius: 0px 0px 0px 5px;
+            }
+          .inner div:first-child strong{
+            border-radius: 5px 0px 0px 0px;
+          }
+
+        .inner span{
+          display: inline-block;
+          padding-left: 10px;
         }
 
-      #inner div{
-        padding: 5px;
-        border-bottom: 1px solid #AAA;
-        }
-        #inner div:last-child{
-          border-bottom: none;
-        }
-        #inner strong{
+        .inner strong{
+          /* padding-right: 5px; */
           display: inline-block;
+          margin: 1px 0px;
+          background-color:#666;
+          color:#FFF;
+          padding: 3px 3px 3px 8px;
           width: 80px;
-          text-align: right;
           }
 </style>

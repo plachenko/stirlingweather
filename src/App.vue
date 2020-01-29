@@ -10,16 +10,16 @@
 
       <!-- Weather widget display -->
       <div style="position: relative; height: 100%; width: 100%; position: relative;">
-        <Map id="map" style="position: absolute;" />
+        <Map id="map" style="position: absolute;" @mapEvt="getMapLocation" :coords="coords" />
         <WeatherWidget id="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
       </div>
 
       <!-- Location capture form -->
-      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation">Check weather for current location</a>
-      <a href="#" v-else id="curLoc" @click="reset">back</a>
+      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation">&#127746; Check weather wear where you are</a>
+      <a href="#" v-else id="curLoc" @click="reset">&#128506; 🗺️back</a>
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
-        <input placeholder="Check weather for a location (London, UK or 03063)" type="search" v-model="location" />
+        <input placeholder="Check weather wear somewhere there (London, UK or 03063)" type="search" v-model="location" />
       </form>
 
     </div>
@@ -41,7 +41,10 @@ import gsap from 'gsap';
 })
 export default class App extends Vue {
   private location: string = "";
-  private browserLoc!: any;
+  private coords: object = {
+    lat: 0,
+    lon: 0
+  };
   private weatherData: object = {};
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
   private error: string = "";
@@ -51,23 +54,32 @@ export default class App extends Vue {
   }
 
   private reset(){
-    this.weatherData = {};
+    gsap.to('#ww', .5, {opacity: 0, onComplete:()=>{
+      this.weatherData = {};
+      this.location = "";
+    }});
     gsap.to('#map', .3, {autoAlpha: 1, display: 'block'});
     gsap.to('#map canvas', .2, {opacity: 1, delay: .5});
     gsap.to('#widget', .5, {height: 250});
-    gsap.to('#ww', 1, {opacity: 0});
     gsap.to('#locinput', 1, {autoAlpha: 1, display: 'block'});
-    this.location = "";
   }
 
   private getBrowserLocation(){
     navigator.geolocation.getCurrentPosition((loc) => {
+      this.coords = {
+        lat: loc.coords.latitude,
+        lon: loc.coords.longitude
+      }
       this.getData('lat='+loc.coords.latitude+'&lon='+loc.coords.longitude);
     })
   }
 
+  private getMapLocation(e: any){
+    this.getData('lat='+e.lat+'&lon='+e.lon);
+  }
+
   private err_enter(el: any){
-    gsap.from(el, .3, {height: 0, padding: 0, opacity: 0, onComplete:()=>{
+    gsap.from(el, .3, {opacity: 0, onComplete:()=>{
       el.innerHTML = `Error: ${this.error}`;
       setTimeout(() => {
         this.error = "";
@@ -77,7 +89,7 @@ export default class App extends Vue {
   }
 
   private err_leave(el: any, done: any){
-    gsap.to(el, {height: 0, padding: 0, opacity: 0, onComplete:done});
+    gsap.to(el, {opacity: 0, onComplete:done});
   }
 
   private getData(query: string){
@@ -85,6 +97,7 @@ export default class App extends Vue {
 
     axios.get(url)
       .then((res) => {
+        this.coords = res.data.coord;
         this.weatherData = res.data;
 
         gsap.to('#map', .3, {autoAlpha: 0});
@@ -143,7 +156,7 @@ html, body{
     padding: 10px;
     display: inline-block;
     text-align: center;
-    background-color: #AAA;
+    background-color: #DDD;
     text-decoration: none;
     width: 100%;
     box-sizing: border-box;

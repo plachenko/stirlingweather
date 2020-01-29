@@ -12,11 +12,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class Map extends Vue {
   @Prop() private data!: object;
+
+  @Prop() private coords!: any;
+  @Watch('coords', {deep: true, immediate: true})
+  private onCoordChange(val: any){
+    this.lat = val.lat.toFixed(2);
+    this.lon = val.lon.toFixed(2);
+  }
+
   private can!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
   private x!: number;
@@ -35,7 +43,10 @@ export default class Map extends Vue {
     this.x = this.can.width/2;
     this.y = this.can.height/2;
 
-    this.draw();
+    this.can.addEventListener('pointerup', (e) => {
+        // this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
+        this.can.style.cursor = "default";
+    });
 
     this.can.addEventListener('pointerdown', (e) => {
       let _x = e.offsetX;
@@ -58,6 +69,7 @@ export default class Map extends Vue {
 
       if(e.pressure){
         this.can.setPointerCapture(e.pointerId);
+        this.can.style.cursor = "none";
         this.lat = this.x;
         this.lon = this.y;
 
