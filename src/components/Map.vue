@@ -6,7 +6,7 @@
       <span><strong>Lon</strong> {{lon}}</span>
     </div>
     <div style="position: relative; border-radius: 15px 15px 0px 0px; width: 100%; height: 100%; overflow: hidden; background-color:rgb(157, 200, 221);">
-      <img src="../assets/world.svg" style="position: absolute;top: -110px;" width="500" alt="">
+      <img src="../assets/world.svg" style="position: absolute;top: -105px; left: 11px;" width="500" alt="">
     </div>
   </div>
 </template>
@@ -23,6 +23,18 @@ export default class Map extends Vue {
   private onCoordChange(val: any){
     this.lat = val.lat.toFixed(2);
     this.lon = val.lon.toFixed(2);
+
+    this.$nextTick(() =>{
+      // let _lonx = (((this.lon - (this.can.width/2))/this.can.width) * 2) * 180 + 180;
+      // let _laty = (((this.lat - (this.can.height/2))/this.can.height) * 2) * 90 * -1 - 90;
+      // let _lonx = (((this.can.width/2) / this.can.width * 2) * 180) + (Number(this.lon) * this.can.width/2);
+      // let _laty = (((this.can.height/2) / this.can.height * 2) * 90) - (Number(this.lat));
+
+      // this.x = _lonx;
+      // this.y = _laty;
+
+      // this.draw()
+    })
   }
 
   private can!: HTMLCanvasElement;
@@ -43,8 +55,10 @@ export default class Map extends Vue {
     this.x = this.can.width/2;
     this.y = this.can.height/2;
 
+    this.draw();
+
     this.can.addEventListener('pointerup', (e) => {
-        // this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
+        this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
         this.can.style.cursor = "default";
     });
 
@@ -70,8 +84,12 @@ export default class Map extends Vue {
       if(e.pressure){
         this.can.setPointerCapture(e.pointerId);
         this.can.style.cursor = "none";
-        this.lat = this.x;
-        this.lon = this.y;
+
+        let _lonx = (((this.x - (this.can.width/2))/this.can.width) * 2) * 180;
+        let _laty = (((this.y - (this.can.height/2))/this.can.height) * 2) * 90 * -1;
+
+        this.lon = Number(_lonx.toFixed(2));
+        this.lat = Number(_laty.toFixed(2));
 
         this.draw();
       }

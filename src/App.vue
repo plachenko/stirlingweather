@@ -49,10 +49,6 @@ export default class App extends Vue {
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
   private error: string = "";
 
-  private mounted(){
-
-  }
-
   private reset(){
     gsap.to('#ww', .5, {opacity: 0, onComplete:()=>{
       this.weatherData = {};
