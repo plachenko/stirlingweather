@@ -21,3 +21,8 @@ npm run serve
 ```
 npm run build
 ```
+
+### Builds and Deploys to github pages (requires gh-pages)
+```
+npm run BnD
+```
