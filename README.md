@@ -2,6 +2,11 @@
 
 Simple weather widget deployed [here](https://plachenko.github.io/stirlingweather/)
 
+## Dependencies:
+- GSAP - animation
+- Axios - REST requests
+- Vue (with typescript, class based components)
+
 ## Project setup
 ```
 npm install
