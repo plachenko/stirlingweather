@@ -5,7 +5,7 @@
       <span><strong>Lat</strong> {{lat}}</span>
       <span><strong>Lon</strong> {{lon}}</span>
     </div>
-    <div style="position: relative; border-radius: 15px; width: 100%; height: 100%; overflow: hidden; background-color:rgb(157, 200, 221);">
+    <div style="position: relative; border-radius: 15px 15px 0px 0px; width: 100%; height: 100%; overflow: hidden; background-color:rgb(157, 200, 221);">
       <img src="../assets/world.svg" style="position: absolute;top: -110px;" width="500" alt="">
     </div>
   </div>

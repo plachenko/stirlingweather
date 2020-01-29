@@ -8,7 +8,7 @@
       <div class="temp" @click="convert()" v-if="data.main" style="border-bottom: 2px solid; border-top: 2px solid;">
         <span id="num">{{Math.round(temp)}}&deg;</span>
         <span>{{metric}}</span>
-        <img style="position: absolute; top: -9px; right: -30px; background-color:#777; border: #FFF 2px solid; border-radius: 90px;" :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
+        <img style="position: absolute; top: -29px; right: -30px; background-color:#777; border: #FFF 2px solid; border-radius: 90px;" :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
       </div>
       <div class="inner">
         <div><strong>Condition</strong><span>{{data.weather[0].description}}</span></div>
@@ -91,19 +91,16 @@ export default class WeatherWidget extends Vue {
         float: left;
         background-color:#FFF;
         padding: 5px;
+        border-radius: 10px 0px 0px 10px;
+        width: 69%;
         }
-        .inner:first-child{
-          border-radius: 10px;
-          text-align:left; 
-          float:left;
-          width: 70%; 
-          }
         .inner:last-child{
           border-radius: 0px 10px 10px 0px;
-          height: 100%;
           float: right;
-          width: 40%; 
-          text-align:left; 
+          width: 30%;
+          padding-top: 40px;
+          text-align:center;
+          height: 120px;
           }
 
         .inner div{
@@ -131,6 +128,6 @@ export default class WeatherWidget extends Vue {
           background-color:#666;
           color:#FFF;
           padding: 3px 3px 3px 8px;
-          width: 80px;
+          width: 100px;
           }
 </style>
