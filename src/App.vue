@@ -156,7 +156,7 @@ html, body{
       position: absolute; 
       font-size: 2em; 
       color:#FFF;
-      z-index:9999; 
+      z-index:9998; 
       font-weight: bold; 
       width: 100%; 
       border-radius: 15px 15px 0px 0px;
@@ -166,7 +166,7 @@ html, body{
 
 .error{
   width: 100%;
-  height: 40px;
+  height: 37px;
   padding: 10px;
   position: absolute;
   background-color:#F00;

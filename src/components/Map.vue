@@ -135,11 +135,11 @@ export default class Map extends Vue {
 
 canvas{
   position: absolute;
-  z-index: 9998;
+  z-index: 9997;
   }
   #latlon{
     position: absolute;
-    z-index: 9998;
+    z-index: 9997;
     bottom: 0px;
     width: 100%;
     }
