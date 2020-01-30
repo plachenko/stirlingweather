@@ -1,13 +1,13 @@
 <template>
   <div id="widget">
     <div v-if="data.main" style="padding: 10px;">
-      <div style="padding-bottom: 5px; box-sizing: border-box; margin-bottom: 10px; width: 100%; border-bottom: 2px solid; float: left; position: relative;">
+      <div id="nameContainer">
         <h2>{{data.name || data.coord.lat}}, {{data.sys.country || data.coord.lon}}</h2>
       </div>
-      <div class="temp" @click="convert()" v-if="data.main" style="border-bottom: 2px solid; border-top: 2px solid;">
+      <div class="temp" @click="convert()" v-if="data.main">
         <span id="num">{{Math.round(temp)}}&deg;</span>
         <span>{{metric}}</span>
-        <img style="background-color:#777; l border: #FFF 2px solid; border-radius: 90px; position: absolute;right: 10px; top: 10px;" :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
+        <img :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
       </div>
       <div class="inner">
         <div><strong>Condition</strong><span>{{data.weather[0].description}}</span></div>
@@ -54,6 +54,15 @@ export default class WeatherWidget extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#nameContainer{
+  padding-bottom: 5px; 
+  box-sizing: border-box; 
+  margin-bottom: 10px; 
+  width: 100%; 
+  border-bottom: 2px solid; 
+  float: left; 
+  position: relative;
+  }
 #widget{
   width: 100%;
   height: 100px;
@@ -65,10 +74,8 @@ export default class WeatherWidget extends Vue {
     margin: 0px;
     float:left;
     margin-left: 170px;
+    font-size: 100%;
   }
-  #widget div{
-    /* width: 100%; */
-    }
   .temp{
     background-color:#FFF;
     position: absolute;
@@ -79,9 +86,19 @@ export default class WeatherWidget extends Vue {
     cursor: pointer;
     user-select: none;
     width: 140px;
+    border-bottom: 2px solid; 
+    border-top: 2px solid;
     }
     .temp #num{
       font-size: 40px;
+      }
+    .temp img{
+      background-color:#777; 
+      border: #FFF 2px solid; 
+      border-radius: 90px; 
+      position: absolute;
+      right: 10px; 
+      top: 5px;
       }
 
       .inner{
@@ -98,7 +115,7 @@ export default class WeatherWidget extends Vue {
           width: 30%;
           padding-top: 40px;
           text-align:center;
-          height: 120px;
+          height: 117px;
           }
 
         .inner div{

@@ -1,16 +1,15 @@
 <template>
   <div id="app">
     <div id="widget">
-      <!-- <h1 style="font-size: 1.5em; display: block; position: absolute; top: -45px;">Check the weather in an area</h1> -->
-
       <!-- Error Handling -->
       <transition @enter="err_enter" @leave="err_leave">
         <div class="error" v-if="error">Error: {{error}}</div>
       </transition>
 
       <!-- Weather widget display -->
-      <div style="position: relative; height: 100%; width: 100%; position: relative;">
-        <Map id="map" style="position: absolute;" @mapEvt="getMapLocation" :coords="coords" />
+      <div id="disp">
+        <div id="date">{{date.toLocaleString("en-US")}}</div>
+        <Map @mapEvt="getMapLocation" :coords="coords" />
         <WeatherWidget id="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
       </div>
 
@@ -40,6 +39,7 @@ import gsap from 'gsap';
   },
 })
 export default class App extends Vue {
+  private date: any = new Date();
   private location: string = "";
   private coords: object = {
     lat: 0,
@@ -48,6 +48,12 @@ export default class App extends Vue {
   private weatherData: object = {};
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
   private error: string = "";
+
+  private mounted(){
+    setInterval(()=>{
+      this.date = new Date();
+    }, 1000)
+  }
 
   private reset(){
     gsap.to('#ww', .5, {opacity: 0, onComplete:()=>{
@@ -59,6 +65,7 @@ export default class App extends Vue {
     }});
     gsap.to('#map', .3, {autoAlpha: 1, display: 'block'});
     gsap.to('#map canvas', .2, {opacity: 1, delay: .5});
+    gsap.to('#date', .3, {autoAlpha: 1, display: 'block', delay: .3});
     gsap.to('#widget', .5, {height: 250});
     gsap.to('#locinput', 1, {autoAlpha: 1, display: 'block'});
   }
@@ -99,6 +106,7 @@ export default class App extends Vue {
 
           gsap.to('#curLoc span', .3, {opacity: 1, delay: .3})
           gsap.to('#map', .3, {autoAlpha: 0});
+          gsap.to('#date', .3, {autoAlpha: 0});
           gsap.to('#map canvas', .1, {opacity: 0});
           gsap.to('#locinput', .5, {autoAlpha:0});
           gsap.to('#widget', .5, {height: 190});
@@ -129,6 +137,13 @@ html, body{
   justify-content: center;
   height: 100%;
   }
+  #disp {
+    position: relative; 
+    height: 100%; 
+    width: 100%; 
+    position: relative;
+    /* overflow: hidden; */
+    }
   #widget {
     position: relative;
     width: 500px;
@@ -137,6 +152,17 @@ html, body{
     border-radius: 15px 15px 0px 0px;
     box-sizing: border-box;
     }
+    #date {
+      position: absolute; 
+      font-size: 2em; 
+      color:#FFF;
+      z-index:9999; 
+      font-weight: bold; 
+      width: 100%; 
+      border-radius: 15px 15px 0px 0px;
+      text-align: center; 
+      background-color:rgba(0,0,0,.4);
+      }
 
 .error{
   width: 100%;

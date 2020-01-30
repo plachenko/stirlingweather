@@ -1,12 +1,12 @@
 <template>
   <div id="map">
     <canvas ref="canvas" />
-    <div id="latlon" style="position: absolute;">
+    <div id="latlon">
       <span><strong>Lat</strong> {{lat}}</span>
       <span><strong>Lon</strong> {{lon}}</span>
     </div>
-    <div style="position: relative; border-radius: 15px 15px 0px 0px; width: 100%; height: 100%; overflow: hidden; background-color:rgb(157, 200, 221);">
-      <img src="../assets/world.svg" style="position: absolute;top: -95px; left: 17px;" width="500" alt="">
+    <div id="worldMap">
+      <img src="../assets/world.svg" width="500" alt="">
     </div>
   </div>
 </template>
@@ -17,6 +17,7 @@ import gsap from 'gsap';
 
 @Component
 export default class Map extends Vue {
+
   @Prop() private data!: object;
 
   @Prop() private coords!: any;
@@ -26,21 +27,9 @@ export default class Map extends Vue {
     this.lon = Number(val.lon.toFixed(2));
 
     this.$nextTick(() =>{
-      this.x =  this.lon * -1;
-      console.log(this.lon)
-      //this.y = (this.can.height/2) + (Number(this.lat) * (90/2));
-      // console.log('test');
-      // gsap.to(this, 1, {x: 0, onUpdate: this.draw()});
-
-      // let _lonx = (((this.lon - (this.can.width/2))/this.can.width) * 2) * 180 + 180;
-      // let _laty = (((this.lat - (this.can.height/2))/this.can.height) * 2) * 90 * -1 - 90;
-      // let _lonx = (((this.can.width/2) / this.can.width * 2) * 180) + (Number(this.lon) * this.can.width/2);
-      // let _laty = (((this.can.height/2) / this.can.height * 2) * 90) - (Number(this.lat));
-
-      // this.x = _lonx;
-      // this.y = _laty;
-
-      this.draw()
+        let _x = (this.can.width/2) + ((this.lon) * (360 / (this.can.width)) * 2);
+        let _y = (this.can.height/2) - ((this.lat) * (180 / (this.can.height))* 2);
+        gsap.to(this, .4, {x: _x, y: _y, onComplete: this.emit})
     })
   }
 
@@ -52,7 +41,12 @@ export default class Map extends Vue {
   private lat: number = 0;
   private lon: number = 0;
 
+  private emit(){
+    // this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
+  }
+
   private mounted(){
+    gsap.ticker.add(this.draw);
 
     this.can = this.$refs.canvas as HTMLCanvasElement;
     this.can.width = this.$el.clientWidth;
@@ -70,8 +64,8 @@ export default class Map extends Vue {
 
         // this.lon = Number(_lonx.toFixed(2));
         // this.lat = Number(_laty.toFixed(2));
-
         this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
+
         this.can.style.cursor = "default";
     });
 
@@ -80,6 +74,12 @@ export default class Map extends Vue {
       let _y = e.offsetY;
       this.x = _x - this.can.width * Math.floor(_x / this.can.width);
       this.y = _y - this.can.height * Math.floor(_y / this.can.height);
+
+      let _lonx = (((this.x - (this.can.width/2))/this.can.width) * 2) * 180;
+      let _laty = (((this.y - (this.can.height/2))/this.can.height) * 2) * 90 * -1;
+
+      this.lon = Number(_lonx.toFixed(2));
+      this.lat = Number(_laty.toFixed(2));
 
       this.draw();
     });
@@ -91,12 +91,13 @@ export default class Map extends Vue {
       let _x = e.offsetX;
       let _y = e.offsetY;
 
-      this.x = _x - this.can.width * Math.floor(_x / this.can.width);
-      this.y = _y - this.can.height * Math.floor(_y / this.can.height);
 
       if(e.pressure){
         this.can.setPointerCapture(e.pointerId);
         this.can.style.cursor = "none";
+
+        this.x = _x - this.can.width * Math.floor(_x / this.can.width);
+        this.y = _y - this.can.height * Math.floor(_y / this.can.height);
 
         let _lonx = (((this.x - (this.can.width/2))/this.can.width) * 2) * 180;
         let _laty = (((this.y - (this.can.height/2))/this.can.height) * 2) * 90 * -1;
@@ -120,15 +121,28 @@ export default class Map extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#worldMap{
+    position: relative; 
+    border-radius: 15px 15px 0px 0px; 
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden;
+    background-color:rgb(157, 200, 221);
+    }
+    #worldMap img{
+        position: absolute;
+        top: -95px; 
+        left: 17px;
+        }
 #map{
-  position: relative;
+  position: absolute;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  border-radius: 15px 15px 0px 0px;
   }
 
 canvas{
-  border-radius: 15px 15px 0px 0px;
   position: absolute;
   z-index: 9998;
   }
