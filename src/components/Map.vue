@@ -29,7 +29,7 @@ export default class Map extends Vue {
     this.$nextTick(() =>{
         let _x = (this.can.width/2) + ((this.lon) * (360 / (this.can.width)) * 2);
         let _y = (this.can.height/2) - ((this.lat) * (180 / (this.can.height))* 2);
-        gsap.to(this, .4, {x: _x, y: _y, onComplete: this.emit})
+        gsap.to(this, .4, {x: _x, y: _y})
     })
   }
 
@@ -40,10 +40,6 @@ export default class Map extends Vue {
 
   private lat: number = 0;
   private lon: number = 0;
-
-  private emit(){
-    // this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
-  }
 
   private mounted(){
     gsap.ticker.add(this.draw);
@@ -59,11 +55,6 @@ export default class Map extends Vue {
     this.draw();
 
     this.can.addEventListener('pointerup', (e) => {
-        // let _lonx = (((e.offsetX - (this.can.width/2))/this.can.width) * 2) * 180;
-        // let _laty = (((e.offsetY - (this.can.height/2))/this.can.height) * 2) * 90 * -1;
-
-        // this.lon = Number(_lonx.toFixed(2));
-        // this.lat = Number(_laty.toFixed(2));
         this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
 
         this.can.style.cursor = "default";
