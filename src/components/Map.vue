@@ -123,7 +123,7 @@ export default class Map extends Vue {
     #worldMap img{
         position: absolute;
         top: -95px; 
-        left: 17px;
+        left: 12px;
         }
 #map{
   position: absolute;

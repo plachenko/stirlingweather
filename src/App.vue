@@ -158,6 +158,7 @@ html, body{
       color:#FFF;
       z-index:9998; 
       font-weight: bold; 
+      border-bottom: 1px solid;
       width: 100%; 
       border-radius: 15px 15px 0px 0px;
       text-align: center; 
