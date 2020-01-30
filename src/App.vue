@@ -15,8 +15,8 @@
       </div>
 
       <!-- Location capture form -->
-      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation">&#9730; Check weather wear where you are</a>
-      <a href="#" v-else id="curLoc" @click="reset">️back</a>
+      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation"><span>&#9730; Check weather wear where you are</span></a>
+      <a href="#" v-else id="curLoc" @click="reset">️<span>back</span></a>
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
         <input placeholder="Check weather wear somewhere there (London, UK or 03063)" type="search" v-model="location" />
@@ -54,6 +54,9 @@ export default class App extends Vue {
       this.weatherData = {};
       this.location = "";
     }});
+    gsap.to('#curLoc span', .3, {opacity: 0, onComplete: () => {
+      gsap.to('#curLoc span', .4, {opacity: 1, delay: .2})
+    }});
     gsap.to('#map', .3, {autoAlpha: 1, display: 'block'});
     gsap.to('#map canvas', .2, {opacity: 1, delay: .5});
     gsap.to('#widget', .5, {height: 250});
@@ -62,10 +65,6 @@ export default class App extends Vue {
 
   private getBrowserLocation(){
     navigator.geolocation.getCurrentPosition((loc) => {
-      this.coords = {
-        lat: loc.coords.latitude,
-        lon: loc.coords.longitude
-      }
       this.getData('lat='+loc.coords.latitude+'&lon='+loc.coords.longitude);
     })
   }
@@ -94,13 +93,18 @@ export default class App extends Vue {
     axios.get(url)
       .then((res) => {
         this.coords = res.data.coord;
-        this.weatherData = res.data;
 
-        gsap.to('#map', .3, {autoAlpha: 0});
-        gsap.to('#map canvas', .1, {opacity: 0});
-        gsap.to('#locinput', .5, {autoAlpha:0});
-        gsap.to('#widget', .5, {height: 190});
-        gsap.fromTo('#ww', {opacity: 0}, {opacity: 1});
+        gsap.to('#curLoc span', .3, {opacity: 0, onComplete: () => {
+          this.weatherData = res.data;
+
+          gsap.to('#curLoc span', .3, {opacity: 1, delay: .3})
+          gsap.to('#map', .3, {autoAlpha: 0});
+          gsap.to('#map canvas', .1, {opacity: 0});
+          gsap.to('#locinput', .5, {autoAlpha:0});
+          gsap.to('#widget', .5, {height: 190});
+          gsap.fromTo('#ww', {opacity: 0}, {opacity: 1});
+        }});
+
       })
       .catch((err)=>{
         this.error = err.response.data.message;
@@ -169,8 +173,8 @@ html, body{
     #locinput input{
       outline: none;
       border-radius: 10px;
-      border: 2px solid;
       box-sizing: border-box;
+      border: 2px solid;
       width: 100%;
       padding: 10px;
       }

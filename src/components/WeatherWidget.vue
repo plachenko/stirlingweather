@@ -7,7 +7,7 @@
       <div class="temp" @click="convert()" v-if="data.main" style="border-bottom: 2px solid; border-top: 2px solid;">
         <span id="num">{{Math.round(temp)}}&deg;</span>
         <span>{{metric}}</span>
-        <img style="position: absolute; top: -29px; right: -30px; background-color:#777; border: #FFF 2px solid; border-radius: 90px;" :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
+        <img style="background-color:#777; l border: #FFF 2px solid; border-radius: 90px; position: absolute;right: 10px; top: 10px;" :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
       </div>
       <div class="inner">
         <div><strong>Condition</strong><span>{{data.weather[0].description}}</span></div>
@@ -64,22 +64,21 @@ export default class WeatherWidget extends Vue {
     text-align: center;
     margin: 0px;
     float:left;
-    margin-left: 150px;
+    margin-left: 170px;
   }
   #widget div{
     /* width: 100%; */
     }
   .temp{
-    text-align: center;
     background-color:#FFF;
     position: absolute;
     left: 10px;
     top: -30px;
     border-radius: 90px;
     padding: 10px;
-    width: 90px !important;
     cursor: pointer;
     user-select: none;
+    width: 140px;
     }
     .temp #num{
       font-size: 40px;

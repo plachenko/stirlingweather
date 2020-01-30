@@ -6,13 +6,14 @@
       <span><strong>Lon</strong> {{lon}}</span>
     </div>
     <div style="position: relative; border-radius: 15px 15px 0px 0px; width: 100%; height: 100%; overflow: hidden; background-color:rgb(157, 200, 221);">
-      <img src="../assets/world.svg" style="position: absolute;top: -105px; left: 11px;" width="500" alt="">
+      <img src="../assets/world.svg" style="position: absolute;top: -95px; left: 17px;" width="500" alt="">
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import gsap from 'gsap';
 
 @Component
 export default class Map extends Vue {
@@ -21,10 +22,16 @@ export default class Map extends Vue {
   @Prop() private coords!: any;
   @Watch('coords', {deep: true, immediate: true})
   private onCoordChange(val: any){
-    this.lat = val.lat.toFixed(2);
-    this.lon = val.lon.toFixed(2);
+    this.lat = Number(val.lat.toFixed(2));
+    this.lon = Number(val.lon.toFixed(2));
 
     this.$nextTick(() =>{
+      this.x =  this.lon * -1;
+      console.log(this.lon)
+      //this.y = (this.can.height/2) + (Number(this.lat) * (90/2));
+      // console.log('test');
+      // gsap.to(this, 1, {x: 0, onUpdate: this.draw()});
+
       // let _lonx = (((this.lon - (this.can.width/2))/this.can.width) * 2) * 180 + 180;
       // let _laty = (((this.lat - (this.can.height/2))/this.can.height) * 2) * 90 * -1 - 90;
       // let _lonx = (((this.can.width/2) / this.can.width * 2) * 180) + (Number(this.lon) * this.can.width/2);
@@ -33,7 +40,7 @@ export default class Map extends Vue {
       // this.x = _lonx;
       // this.y = _laty;
 
-      // this.draw()
+      this.draw()
     })
   }
 
@@ -48,8 +55,8 @@ export default class Map extends Vue {
   private mounted(){
 
     this.can = this.$refs.canvas as HTMLCanvasElement;
-    this.can.width = this.$el.clientWidth - 25;
-    this.can.height = this.$el.clientHeight - 20;
+    this.can.width = this.$el.clientWidth;
+    this.can.height = this.$el.clientHeight;
     this.ctx = this.can.getContext('2d') as CanvasRenderingContext2D;
 
     this.x = this.can.width/2;
@@ -58,6 +65,12 @@ export default class Map extends Vue {
     this.draw();
 
     this.can.addEventListener('pointerup', (e) => {
+        // let _lonx = (((e.offsetX - (this.can.width/2))/this.can.width) * 2) * 180;
+        // let _laty = (((e.offsetY - (this.can.height/2))/this.can.height) * 2) * 90 * -1;
+
+        // this.lon = Number(_lonx.toFixed(2));
+        // this.lat = Number(_laty.toFixed(2));
+
         this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
         this.can.style.cursor = "default";
     });
@@ -96,7 +109,7 @@ export default class Map extends Vue {
     })
   }
 
-  private draw(){
+  private draw(): any{
     this.ctx.fillStyle = "#F00";
     this.ctx.clearRect(0,0,this.can.width, this.can.height);
     this.ctx.fillRect(this.x, 0, 1, this.can.height);
@@ -108,7 +121,6 @@ export default class Map extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #map{
-  padding: 10px;
   position: relative;
   width: 100%;
   height: 100%;
@@ -123,16 +135,24 @@ canvas{
   #latlon{
     position: absolute;
     z-index: 9998;
-    bottom: 10px;
-    right: 15px;
+    bottom: 0px;
+    width: 100%;
     }
     #latlon span{
-      padding: 5px;
-      margin: 4px;
       font-size: 10px;
+      padding: 5px 0px;
       display: inline-block;
       color:#FFF;
-      width: 55px;
+      width: 50%;
+      text-align: center;
       background-color: rgba(0,0,0,.4);
+      box-sizing: border-box;
       }
+      #latlon span:first-child{
+        float: left;
+        border-right: 1px solid;
+        }
+      #latlon span:last-child{
+        float: right;
+        }
 </style>
