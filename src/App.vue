@@ -101,7 +101,7 @@ export default class App extends Vue {
       .then((res) => {
         this.coords = res.data.coord;
 
-        gsap.to('#curLoc span', .3, {opacity: 0, onComplete: () => {
+        gsap.to('#curLoc span', .3, {opacity: 0, delay:.1, onComplete: () => {
           this.weatherData = res.data;
 
           gsap.to('#curLoc span', .3, {opacity: 1, delay: .3})
