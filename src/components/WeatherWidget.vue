@@ -25,15 +25,21 @@
         <div><strong>Pressure</strong><span>{{data.main.pressure}} hPa</span></div>
         <div><strong>Humidity</strong><span>{{data.main.humidity}}%</span></div>
       </div>
-      <div class="inner">Wear something.</div>
+      <!-- <forecast class="inner" :cid="data.id" :coord="data.coord" /> -->
+      <div class="inner" style="padding-top: 50px;">Wear something.</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import Forecast from './Forecast.vue';
 
-@Component
+@Component({
+  components:{
+    Forecast
+  }
+})
 export default class WeatherWidget extends Vue {
   private metric: string = "F";
   private temp: number = 0;
@@ -97,7 +103,7 @@ export default class WeatherWidget extends Vue {
     font-size: 100%;
   }
   #info{
-    text-align: center;
+    text-align: right;
     font-size: 10px;
     margin-bottom: 5px;
     }
@@ -141,7 +147,6 @@ export default class WeatherWidget extends Vue {
           border-radius: 0px 10px 10px 0px;
           float: right;
           width: 30%;
-          padding-top: 40px;
           text-align:center;
           height: 117px;
           }

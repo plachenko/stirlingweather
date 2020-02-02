@@ -9,13 +9,21 @@
       <!-- Weather widget display -->
       <div id="disp">
         <div id="date">{{date.toLocaleString("en-US")}}</div>
-        <Map @mapEvt="getMapLocation" @mdEvt="pullTime" :coords="coords" :locked="locked" />
+        <Map @latCh="latEvt" @lonCh="lonEvt" @mapEvt="getMapLocation" @mdEvt="pullTime" :coords="coords" :locked="locked" />
         <WeatherWidget id="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
       </div>
 
       <!-- Location capture form -->
-      <a v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation"><span>&#9730; Check weather wear where you are</span></a>
+      <!-- <a id="curLoc">️<span></span></a> -->
+      <a v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation">
+        <div v-if="lat && lon" id="latlonStat">
+          <span>Lat: {{lat}}</span>
+          <span>Lon: {{lon}}</span>
+        </div>
+        <span v-else>&#9730; Check weather wear where you are</span>
+      </a>
       <a v-else id="curLoc" @click="reset">️<span>back</span></a>
+      <!-- <a id="curLoc">{{this.coords.lat}}</a> -->
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
         <input placeholder="Check weather wear somewhere there (London, UK or 03063)" type="search" v-model="location" />
@@ -50,17 +58,34 @@ export default class App extends Vue {
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
   private error: string = "";
 
+  private lat: number = 0;
+  private lon: number = 0;
+
   private mounted(){
     setInterval(()=>{
       this.date = new Date();
     }, 1000)
   }
 
-  private pullTime(){
+  private pullTime(e: any){
+
+    gsap.to('#curLoc', .2, {padding: 0});
+    gsap.to('#locinput', .3, {autoAlpha: 0});
     // gsap.to('#date', .3, {top: "-=40", borderRadius: "15px"});
   }
 
+  private latEvt(val: number){
+    gsap.to('#curLoc', .6, {backgroundColor: "#333", color: "#FFF"});
+    this.lat = val;
+  }
+
+  private lonEvt(val: number){
+    this.lon = val;
+  }
+
   private reset(){
+    this.lat = 0;
+    this.lon = 0;
     gsap.to('#ww', .5, {opacity: 0, onComplete:()=>{
       this.weatherData = {};
       this.location = "";
@@ -73,7 +98,7 @@ export default class App extends Vue {
     gsap.to('#map canvas', .2, {opacity: 1, delay: .5});
     gsap.to('#date', .3, {autoAlpha: 1, display: 'block', delay: .3});
     gsap.to('#widget', .5, {height: 250});
-    gsap.to('#locinput', 1, {autoAlpha: 1, display: 'block'});
+    gsap.to('#locinput', .5, {autoAlpha: 1, display: 'block'});
 
     this.locked = false;
   }
@@ -110,9 +135,11 @@ export default class App extends Vue {
         this.coords = res.data.coord;
         this.locked = true;
 
+        gsap.to('#curLoc', .2, {padding: 10});
         gsap.to('#curLoc span', .3, {opacity: 0, delay:.1, onComplete: () => {
           this.weatherData = res.data;
 
+          gsap.to('#curLoc', .3, {backgroundColor: "#DDD", color: "#000"});
           gsap.to('#curLoc span', .3, {opacity: 1, delay: .3})
           gsap.to('#map', .3, {autoAlpha: 0});
           gsap.to('#date', .3, {autoAlpha: 0});
@@ -214,6 +241,19 @@ html, body{
       border: 1px solid;
       width: 100%;
       padding: 10px;
+      }
+
+      #latlonStat span{
+        display: inline-block;
+        width: 50%;
+        height: 100%;
+        border-right: 2px solid;
+        box-sizing: border-box;
+        text-align: center;
+        padding: 15px;
+      }
+      #latlonStat span:last-child{
+        border-right: none;
       }
 
 </style>

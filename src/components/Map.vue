@@ -2,8 +2,10 @@
   <div id="map">
     <canvas ref="canvas" />
     <div id="latlon">
+      <!--
       <span><strong>Lat</strong> {{lat}}</span>
       <span><strong>Lon</strong> {{lon}}</span>
+      -->
     </div>
     <div id="worldMap">
       <img src="../assets/world.svg" width="500" alt="">
@@ -32,6 +34,16 @@ export default class Map extends Vue {
         let _y = (this.can.height/2) - ((this.lat) * (180 / (this.can.height))* 2);
         gsap.to(this, .4, {x: _x, y: _y})
     })
+  }
+
+  @Watch('lat')
+  private latChange(val: number){
+    this.$emit('latCh', val);
+  }
+
+  @Watch('lon')
+  private lonChange(val: number){
+    this.$emit('lonCh', val);
   }
 
   private can!: HTMLCanvasElement;
@@ -66,7 +78,7 @@ export default class Map extends Vue {
 
     this.can.addEventListener('pointerdown', (e) => {
       if(!this.locked){
-        this.$emit('mdEvt');
+        this.$emit('mdEvt', e);
         gsap.to('#latlon', {opacity: 1})
 
         let _x = e.offsetX;
@@ -91,8 +103,9 @@ export default class Map extends Vue {
       let _x = e.offsetX;
       let _y = e.offsetY;
 
-
       if(e.pressure && !this.locked){
+        this.$emit('mdEvt', e);
+
         this.can.setPointerCapture(e.pointerId);
         this.can.style.cursor = "none";
 
