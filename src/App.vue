@@ -9,7 +9,7 @@
       <!-- Weather widget display -->
       <div id="disp">
         <div id="date">{{date.toLocaleString("en-US")}}</div>
-        <Map @mapEvt="getMapLocation" @mdEvt="pullTime" :coords="coords" />
+        <Map @mapEvt="getMapLocation" @mdEvt="pullTime" :coords="coords" :locked="locked" />
         <WeatherWidget id="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
       </div>
 
@@ -41,6 +41,7 @@ import gsap from 'gsap';
 export default class App extends Vue {
   private date: any = new Date();
   private location: string = "";
+  private locked: Boolean = false;
   private coords: object = {
     lat: 0,
     lon: 0
@@ -73,6 +74,8 @@ export default class App extends Vue {
     gsap.to('#date', .3, {autoAlpha: 1, display: 'block', delay: .3});
     gsap.to('#widget', .5, {height: 250});
     gsap.to('#locinput', 1, {autoAlpha: 1, display: 'block'});
+
+    this.locked = false;
   }
 
   private getBrowserLocation(){
@@ -105,6 +108,7 @@ export default class App extends Vue {
     axios.get(url)
       .then((res) => {
         this.coords = res.data.coord;
+        this.locked = true;
 
         gsap.to('#curLoc span', .3, {opacity: 0, delay:.1, onComplete: () => {
           this.weatherData = res.data;

@@ -19,6 +19,7 @@ import gsap from 'gsap';
 export default class Map extends Vue {
 
   @Prop() private data!: object;
+  @Prop() private locked!: boolean;
 
   @Prop() private coords!: any;
   @Watch('coords', {deep: true, immediate: true})
@@ -55,28 +56,32 @@ export default class Map extends Vue {
     this.draw();
 
     this.can.addEventListener('pointerup', (e) => {
+      if(!this.locked){
         this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
 
         gsap.to('#latlon', {opacity: 0})
         this.can.style.cursor = "default";
+      }
     });
 
     this.can.addEventListener('pointerdown', (e) => {
-      this.$emit('mdEvt');
-      gsap.to('#latlon', {opacity: 1})
+      if(!this.locked){
+        this.$emit('mdEvt');
+        gsap.to('#latlon', {opacity: 1})
 
-      let _x = e.offsetX;
-      let _y = e.offsetY;
-      this.x = _x - this.can.width * Math.floor(_x / this.can.width);
-      this.y = _y - this.can.height * Math.floor(_y / this.can.height);
+        let _x = e.offsetX;
+        let _y = e.offsetY;
+        this.x = _x - this.can.width * Math.floor(_x / this.can.width);
+        this.y = _y - this.can.height * Math.floor(_y / this.can.height);
 
-      let _lonx = (((this.x - (this.can.width/2))/this.can.width) * 2) * 180;
-      let _laty = (((this.y - (this.can.height/2))/this.can.height) * 2) * 90 * -1;
+        let _lonx = (((this.x - (this.can.width/2))/this.can.width) * 2) * 180;
+        let _laty = (((this.y - (this.can.height/2))/this.can.height) * 2) * 90 * -1;
 
-      this.lon = Number(_lonx.toFixed(2));
-      this.lat = Number(_laty.toFixed(2));
+        this.lon = Number(_lonx.toFixed(2));
+        this.lat = Number(_laty.toFixed(2));
 
-      this.draw();
+        this.draw();
+      }
     });
 
     this.can.addEventListener('pointermove', (e) => {
@@ -87,7 +92,7 @@ export default class Map extends Vue {
       let _y = e.offsetY;
 
 
-      if(e.pressure){
+      if(e.pressure && !this.locked){
         this.can.setPointerCapture(e.pointerId);
         this.can.style.cursor = "none";
 
