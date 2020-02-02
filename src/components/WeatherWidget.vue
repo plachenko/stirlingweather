@@ -13,13 +13,11 @@
         <img :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
       </div>
 
-      <!--
       <div id="info">
-        <span>{{data.sys.time}}</span>
-        <span>Lat: {{data.coord.lat}}</span>
-        <span>Lon: {{data.coord.lon}}</span>
+        <!-- <span><strong>{{date}}</strong></span> -->
+        <span>(Lat: {{data.coord.lat}}, </span>
+        <span>Lon: {{data.coord.lon}})</span>
       </div>
-      -->
 
       <div class="inner">
         <div><strong>Condition</strong><span>{{data.weather[0].description}}</span></div>
@@ -41,6 +39,7 @@ export default class WeatherWidget extends Vue {
   private temp: number = 0;
   private wLink: string[] = ["https://openweathermap.org/city/"];
   private gLink: string[] = ["https://www.google.com/search?q="];
+  private date: any = new Date().toLocaleString();
 
   @Prop() private data!: any;
   @Watch('data', {deep: true, immediate: true})
@@ -72,8 +71,7 @@ export default class WeatherWidget extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #nameContainer{
-  padding-bottom: 10px; 
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   box-sizing: border-box; 
   width: 100%; 
   border-bottom: 2px solid; 
@@ -99,9 +97,9 @@ export default class WeatherWidget extends Vue {
     font-size: 100%;
   }
   #info{
+    text-align: center;
     font-size: 10px;
-    padding: 10px 0px;
-    margin-top: 15px;
+    margin-bottom: 5px;
     }
     #info span{
       padding: 3px;
