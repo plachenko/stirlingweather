@@ -2,13 +2,25 @@
   <div id="widget">
     <div v-if="data.main" style="padding: 10px;">
       <div id="nameContainer">
-        <h2>{{data.name || data.coord.lat}}, {{data.sys.country || data.coord.lon}}</h2>
+        <!-- <a :href='gLink[0] + gLink[1] + ", " + gLink[2]' target="_blank"> -->
+        <a :href='wLink[0] + wLink[1]' target="_blank">
+          <h2>{{data.name || data.coord.lat}}, {{data.sys.country || data.coord.lon}}</h2>
+        </a>
       </div>
       <div class="temp" @click="convert()" v-if="data.main">
         <span id="num">{{Math.round(temp)}}&deg;</span>
         <span>{{metric}}</span>
         <img :src="'https://www.openweathermap.org/img/wn/'+data.weather[0].icon+'.png'" />
       </div>
+
+      <!--
+      <div id="info">
+        <span>{{data.sys.time}}</span>
+        <span>Lat: {{data.coord.lat}}</span>
+        <span>Lon: {{data.coord.lon}}</span>
+      </div>
+      -->
+
       <div class="inner">
         <div><strong>Condition</strong><span>{{data.weather[0].description}}</span></div>
         <div><strong>Wind</strong><span>{{data.wind.speed}} mph</span></div>
@@ -27,11 +39,16 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 export default class WeatherWidget extends Vue {
   private metric: string = "F";
   private temp: number = 0;
+  private wLink: string[] = ["https://openweathermap.org/city/"];
+  private gLink: string[] = ["https://www.google.com/search?q="];
 
   @Prop() private data!: any;
   @Watch('data', {deep: true, immediate: true})
   private ondataChange(val: any){
     if(val.main){
+      this.wLink[1] = val.id; 
+      this.gLink[1] = val.name || val.coord.lat;
+      this.gLink[2] = val.sys.country || val.coord.lon; 
       this.temp = val.main.temp;
       if(this.metric == "C"){
         this.convert();
@@ -55,13 +72,19 @@ export default class WeatherWidget extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #nameContainer{
-  padding-bottom: 5px; 
+  padding-bottom: 10px; 
+  margin-bottom: 10px;
   box-sizing: border-box; 
-  margin-bottom: 10px; 
   width: 100%; 
   border-bottom: 2px solid; 
   float: left; 
   position: relative;
+  }
+  #nameContainer a{
+    color:#666;
+    display: inline-block;
+    border-bottom: 1px dashed;
+    margin-left: 170px;
   }
 #widget{
   width: 100%;
@@ -73,9 +96,16 @@ export default class WeatherWidget extends Vue {
     text-align: center;
     margin: 0px;
     float:left;
-    margin-left: 170px;
     font-size: 100%;
   }
+  #info{
+    font-size: 10px;
+    padding: 10px 0px;
+    margin-top: 15px;
+    }
+    #info span{
+      padding: 3px;
+    }
   .temp{
     background-color:#FFF;
     position: absolute;

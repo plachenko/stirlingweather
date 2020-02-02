@@ -57,10 +57,14 @@ export default class Map extends Vue {
     this.can.addEventListener('pointerup', (e) => {
         this.$emit('mapEvt', {lat: this.lat, lon: this.lon});
 
+        gsap.to('#latlon', {opacity: 0})
         this.can.style.cursor = "default";
     });
 
     this.can.addEventListener('pointerdown', (e) => {
+      this.$emit('mdEvt');
+      gsap.to('#latlon', {opacity: 1})
+
       let _x = e.offsetX;
       let _y = e.offsetY;
       this.x = _x - this.can.width * Math.floor(_x / this.can.width);
@@ -142,6 +146,7 @@ canvas{
     z-index: 9997;
     bottom: 0px;
     width: 100%;
+    opacity: 0;
     }
     #latlon span{
       font-size: 10px;

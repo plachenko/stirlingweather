@@ -9,7 +9,7 @@
       <!-- Weather widget display -->
       <div id="disp">
         <div id="date">{{date.toLocaleString("en-US")}}</div>
-        <Map @mapEvt="getMapLocation" :coords="coords" />
+        <Map @mapEvt="getMapLocation" @mdEvt="pullTime" :coords="coords" />
         <WeatherWidget id="ww" v-show="weatherData.hasOwnProperty('main')" :data="weatherData" />
       </div>
 
@@ -55,6 +55,10 @@ export default class App extends Vue {
     }, 1000)
   }
 
+  private pullTime(){
+    // gsap.to('#date', .3, {top: "-=40", borderRadius: "15px"});
+  }
+
   private reset(){
     gsap.to('#ww', .5, {opacity: 0, onComplete:()=>{
       this.weatherData = {};
@@ -63,6 +67,7 @@ export default class App extends Vue {
     gsap.to('#curLoc span', .3, {opacity: 0, onComplete: () => {
       gsap.to('#curLoc span', .4, {opacity: 1, delay: .2})
     }});
+    // gsap.to('#date', .3, {top: 0, borderRadius: "15px 15px 0px 0px"});
     gsap.to('#map', .3, {autoAlpha: 1, display: 'block'});
     gsap.to('#map canvas', .2, {opacity: 1, delay: .5});
     gsap.to('#date', .3, {autoAlpha: 1, display: 'block', delay: .3});
@@ -201,7 +206,7 @@ html, body{
       outline: none;
       border-radius: 10px;
       box-sizing: border-box;
-      border: 2px solid;
+      border: 1px solid;
       width: 100%;
       padding: 10px;
       }
