@@ -20,6 +20,7 @@ export default class Forecast extends Vue {
   private appID: string = "3271837e9218269f1e7f49308577ec1c"
   private data: any = {};
   private cur: any = {};
+  private err: string = "";
 
   @Prop() private cid!: number;
   @Prop() private coord!: any;
@@ -36,7 +37,7 @@ export default class Forecast extends Vue {
         this.cur = res.data.list[0]
       })
       .catch((err) => {
-        console.log('err')
+        this.err = err;
       })
   }
 
