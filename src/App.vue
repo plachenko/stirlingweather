@@ -14,8 +14,8 @@
       </div>
 
       <!-- Location capture form -->
-      <a href="#" v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation"><span>&#9730; Check weather wear where you are</span></a>
-      <a href="#" v-else id="curLoc" @click="reset">️<span>back</span></a>
+      <a v-if="!weatherData.hasOwnProperty('main')" id="curLoc" @click="getBrowserLocation"><span>&#9730; Check weather wear where you are</span></a>
+      <a v-else id="curLoc" @click="reset">️<span>back</span></a>
 
       <form id="locinput" @submit.prevent="getData('q='+location)">
         <input placeholder="Check weather wear somewhere there (London, UK or 03063)" type="search" v-model="location" />
@@ -195,6 +195,7 @@ html, body{
     color:#333;
     border-radius: 0px 0px 15px 15px;
     font-weight: bold;
+    cursor: pointer;
     }
   #locinput{
     box-sizing: border-box;
