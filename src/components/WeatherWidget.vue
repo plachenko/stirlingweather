@@ -15,8 +15,10 @@
 
       <div id="info">
         <!-- <span><strong>{{date}}</strong></span> -->
-        <span>(Lat: {{data.coord.lat}}, </span>
-        <span>Lon: {{data.coord.lon}})</span>
+        <div v-if="data.name">
+          <span>(Lat: {{data.coord.lat}}, </span>
+          <span>Lon: {{data.coord.lon}})</span>
+        </div>
       </div>
 
       <div class="inner">
@@ -106,6 +108,7 @@ export default class WeatherWidget extends Vue {
     text-align: right;
     font-size: 10px;
     margin-bottom: 5px;
+    min-height: 35px;
     }
     #info span{
       padding: 3px;
