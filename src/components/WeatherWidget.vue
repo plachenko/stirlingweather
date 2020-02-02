@@ -28,7 +28,10 @@
         <div><strong>Humidity</strong><span>{{data.main.humidity}}%</span></div>
       </div>
       <!-- <forecast class="inner" :cid="data.id" :coord="data.coord" /> -->
-      <div class="inner" style="padding-top: 50px;">Wear something.</div>
+      <div class="inner" style="padding-top: 10px;">
+        <div style="padding-bottom: 3px;">You should wear</div>
+        <div style="padding-top: 30px;">something</div>
+      </div>
     </div>
   </div>
 </template>
