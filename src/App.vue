@@ -39,6 +39,7 @@ import WeatherWidget from './components/WeatherWidget.vue';
 import Map from './components/Map.vue';
 import axios from 'axios';
 import gsap from 'gsap';
+import WeatherAPI from './util/WeatherAPI';
 
 @Component({
   components: {
@@ -55,11 +56,12 @@ export default class App extends Vue {
     lon: 0
   };
   private weatherData: object = {};
-  private appID: string = "3271837e9218269f1e7f49308577ec1c"
+  private appID: string = process.env.VUE_APP_SECRET;
   private error: string = "";
 
   private lat: number = 0;
   private lon: number = 0;
+  private weather = new WeatherAPI(process.env.VUE_APP_SECRET);
 
   private mounted(){
     setInterval(()=>{
@@ -105,12 +107,17 @@ export default class App extends Vue {
 
   private getBrowserLocation(){
     navigator.geolocation.getCurrentPosition((loc) => {
-      this.getData('lat='+loc.coords.latitude+'&lon='+loc.coords.longitude);
+      this.weather.getData('lat='+loc.coords.latitude+'&lon='+loc.coords.longitude);
+      console.log(this.weather.data);
+
+      // this.getData('lat='+loc.coords.latitude+'&lon='+loc.coords.longitude);
     })
   }
 
   private getMapLocation(e: any){
-    this.getData('lat='+e.lat+'&lon='+e.lon);
+    this.weather.getData('lat='+e.lat+'&lon='+e.lon);
+    console.log(this.weather.data);
+    // this.getData('lat='+e.lat+'&lon='+e.lon);
   }
 
   private err_enter(el: any){
@@ -127,6 +134,7 @@ export default class App extends Vue {
     gsap.to(el, {opacity: 0, onComplete:done});
   }
 
+  /*
   private getData(query: string){
     let url = 'https://api.openweathermap.org/data/2.5/weather?' + query + '&APPID=' + this.appID + '&units=imperial';
 
@@ -154,6 +162,7 @@ export default class App extends Vue {
         this.error = err.response.data.message;
       })
   }
+  */
 }
 </script>
 
@@ -174,9 +183,9 @@ html, body{
   height: 100%;
   }
   #disp {
-    position: relative; 
-    height: 100%; 
-    width: 100%; 
+    position: relative;
+    height: 100%;
+    width: 100%;
     position: relative;
     /* overflow: hidden; */
     }
@@ -189,15 +198,15 @@ html, body{
     box-sizing: border-box;
     }
     #date {
-      position: absolute; 
-      font-size: 2em; 
+      position: absolute;
+      font-size: 2em;
       color:#FFF;
-      z-index:9998; 
-      font-weight: bold; 
+      z-index:9998;
+      font-weight: bold;
       border-bottom: 1px solid;
-      width: 100%; 
+      width: 100%;
       border-radius: 15px 15px 0px 0px;
-      text-align: center; 
+      text-align: center;
       background-color:rgba(0,0,0,.4);
       }
 
